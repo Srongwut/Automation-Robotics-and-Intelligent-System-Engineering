@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srongwut — ARIS Applicant · KKU Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS (Crimson / Burgundy Theme #75292D) ────────── */
+:root {
+  --bg:        #0a0a0f;
+  --bg-s:      #0f0a0d;
+  --bg-card:   #141014;
+  --accent:    #ff4b5c;
+  --accent-d:  rgba(255,75,92,.12);
+  --accent-g:  0 0 18px rgba(255,75,92,.45), 0 0 55px rgba(255,75,92,.15);
+  --burgundy:  #75292D;
+  --burgundy-d:rgba(117,41,45,.25);
+  --border:    rgba(255,75,92,.12);
+  --t1:        #f4eaeb;
+  --t2:        #a0787d;
+  --t3:        #553a3d;
+  --mono:      'Space Mono', monospace;
+  --head:      'Syne', sans-serif;
+  --ease:      cubic-bezier(.4,0,.2,1);
+  --nav-h:     70px;
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--accent-d) var(--bg)}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--accent-d);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,75,92,.3)}
+body{background:var(--bg);color:var(--t1);font-family:var(--head);line-height:1.65;overflow-x:hidden;cursor:none}
+a{color:inherit;text-decoration:none}
+
+/* ─── CUSTOM CURSOR ──────────────────────────────────── */
+#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#cur{width:8px;height:8px;background:var(--accent);box-shadow:0 0 12px var(--accent),0 0 30px rgba(255,75,92,.4);transition:transform .15s var(--ease),width .25s var(--ease),height .25s var(--ease)}
+#cur-ring{width:34px;height:34px;border:1px solid rgba(255,75,92,.35);transition:border-color .25s var(--ease)}
+@media(max-width:768px){#cur,#cur-ring{display:none}body{cursor:auto}}
+
+/* ─── GRAIN OVERLAY ──────────────────────────────────── */
+#grain{position:fixed;inset:0;pointer-events:none;z-index:500;opacity:.028;
+  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/></filter><rect width='250' height='250' filter='url(%23n)'/></svg>");
+  background-size:250px 250px}
+
+/* ─── NAV ────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);display:flex;align-items:center;padding:0 48px;transition:height .35s var(--ease),background .35s var(--ease),border-color .35s var(--ease);border-bottom:1px solid transparent}
+nav.scrolled{height:56px;background:rgba(10,10,15,.88);backdrop-filter:blur(18px) saturate(1.4);border-color:var(--border)}
+.nav-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--accent)}
+.nav-logo span{color:var(--t3)}
+.nav-links{list-style:none;display:flex;gap:40px}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--t2);position:relative;padding-bottom:3px;transition:color .25s}
+.nav-links a::after{content:'';position:absolute;bottom:-1px;left:0;width:0;height:1px;background:var(--accent);transition:width .3s var(--ease);box-shadow:var(--accent-g)}
+.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--t2);transition:var(--ease) .3s}
+@media(max-width:768px){
+  nav{padding:0 24px}
+  .hamburger{display:flex}
+  .nav-links{position:fixed;top:56px;left:0;right:0;flex-direction:column;gap:0;background:rgba(10,10,15,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transform:translateY(-110%);opacity:0;transition:transform .35s var(--ease),opacity .3s;pointer-events:none;padding:24px}
+  .nav-links.open{transform:translateY(0);opacity:1;pointer-events:all}
+  .nav-links a{font-size:13px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+  .hamburger.open span:nth-child(2){opacity:0}
+  .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+}
+
+/* ─── SECTION SHELL ────────────────────────────────    */
+section{position:relative;padding:120px 48px}
+.wrap{max-width:1200px;margin:0 auto}
+@media(max-width:768px){section{padding:80px 24px}}
+
+/* ─── SECTION LABEL ────────────────────────────────    */
+.s-label{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.s-label::after{content:'';flex-shrink:0;width:36px;height:1px;background:var(--accent);opacity:.5}
+.s-num{color:var(--t3);font-size:10px}
+.s-title{font-family:var(--head);font-weight:800;font-size:clamp(2rem,5.5vw,3.8rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:64px}
+.s-title em{font-style:normal;color:var(--accent)}
+
+/* ─── BG WATERMARK NUMBER ────────────────────────────── */
+.wm{position:absolute;font-family:var(--head);font-weight:800;font-size:22vw;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(117,41,45,.15);top:50%;right:-2vw;transform:translateY(-50%);pointer-events:none;user-select:none;white-space:nowrap}
+
+/* ─── CIRCUIT DECO ───────────────────────────────────── */
+.circuit{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.06}
+.circuit svg{position:absolute;width:560px;height:560px}
+
+/* ─── HERO ───────────────────────────────────────────── */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:var(--nav-h);overflow:hidden}
+#hero::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(117,41,45,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(117,41,45,.08) 1px,transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(ellipse 85% 85% at 50% 50%,#000 20%,transparent 100%);mask-image:radial-gradient(ellipse 85% 85% at 50% 50%,#000 20%,transparent 100%)}
+#hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 70% 40%,rgba(117,41,45,.08) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:2}
+.hero-status{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--t2);margin-bottom:32px;text-transform:uppercase}
+.hero-status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+.hero-name{font-family:var(--head);font-weight:800;font-size:clamp(3.8rem,11.5vw,10rem);line-height:.92;letter-spacing:-.035em;margin-bottom:32px}
+.hero-name .solid{color:var(--t1)}
+.hero-name .ghost{color:transparent;-webkit-text-stroke:1.5px rgba(255,75,92,.55)}
+.hero-sub{font-family:var(--mono);font-size:clamp(12px,1.6vw,14px);color:var(--t2);margin-bottom:48px;min-height:1.5em}
+.hero-sub .typed{color:var(--t1)}
+.blink-cur{display:inline-block;width:2px;height:.9em;background:var(--accent);margin-left:2px;vertical-align:middle;box-shadow:0 0 8px var(--accent);animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+
+/* Fixed calc bugs in clip-path */
+.btn{display:inline-flex;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:13px 28px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s;cursor:pointer;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));border:none}
+.btn-fill{background:var(--accent);color:#080b0e;font-weight:700}
+.btn-fill:hover{transform:translateY(-3px);box-shadow:var(--accent-g)}
+.btn-out{background:transparent;color:var(--accent);border:1px solid var(--border)}
+.btn-out:hover{background:var(--accent-d);border-color:rgba(255,75,92,.4);transform:translateY(-3px);box-shadow:var(--accent-g)}
+
+/* floating shapes */
+.shapes{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.shape{position:absolute;animation:drift 20s ease-in-out infinite;opacity:.08}
+.shape:nth-child(1){width:130px;height:130px;top:14%;right:11%;clip-path:polygon(50% 0%,0% 100%,100% 100%);background:var(--accent);animation-duration:19s}
+.shape:nth-child(2){width:90px;height:90px;top:58%;right:22%;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);background:var(--burgundy);animation-duration:25s;animation-delay:-7s;opacity:.1}
+.shape:nth-child(3){width:55px;height:55px;top:28%;right:32%;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);background:var(--accent);animation-duration:14s;animation-delay:-4s;opacity:.06}
+.shape:nth-child(4){width:200px;height:200px;top:2%;right:2%;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);background:var(--burgundy);animation-duration:32s;animation-delay:-12s;opacity:.06}
+.shape:nth-child(5){width:42px;height:42px;top:78%;right:8%;clip-path:polygon(50% 0%,0% 100%,100% 100%);background:var(--accent);animation-duration:11s;animation-delay:-9s;opacity:.12}
+.shape:nth-child(6){width:70px;height:70px;top:45%;right:5%;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);background:var(--burgundy);animation-duration:22s;animation-delay:-3s;opacity:.08}
+@keyframes drift{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-22px) rotate(6deg)}50%{transform:translateY(-10px) rotate(-4deg)}75%{transform:translateY(-28px) rotate(9deg)}}
+
+.scroll-down{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);animation:bob 2.2s ease-in-out infinite}
+.scroll-down svg{width:14px;height:14px;stroke:var(--t3)}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.5}50%{transform:translateX(-50%) translateY(7px);opacity:.9}}
+
+/* ─── ABOUT ──────────────────────────────────────────── */
+#about{background:var(--bg-s)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:56px}}
+
+.bio p{color:var(--t2);font-size:15.5px;line-height:1.85;margin-bottom:20px}
+.bio p strong{color:var(--t1);font-weight:600}
+.bio p em{font-style:normal;color:var(--accent)}
+.bio-meta{margin-top:32px;display:flex;flex-direction:column;gap:12px}
+.meta-row{display:flex;gap:16px;font-family:var(--mono);font-size:11px}
+.meta-row .lbl{color:var(--t3);min-width:72px;flex-shrink:0}
+.meta-row .val{color:var(--t2)}
+
+.skills-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:32px}
+.skill-list{display:flex;flex-direction:column;gap:28px}
+.skill-row{}
+.skill-top{display:flex;justify-content:space-between;margin-bottom:8px}
+.skill-name{font-family:var(--mono);font-size:11px;color:var(--t2);letter-spacing:.06em}
+.skill-pct{font-family:var(--mono);font-size:11px;color:var(--accent)}
+.track{height:1.5px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--burgundy));border-radius:1px;box-shadow:0 0 12px rgba(255,75,92,.5);transition:width 1.3s cubic-bezier(.22,1,.36,1)}
+.skill-row.lit .bar{width:var(--w)}
+@media(prefers-reduced-motion:reduce){.bar{transition:none;width:var(--w) !important}}
+
+/* ─── PROJECTS ───────────────────────────────────────── */
+#projects{}
+.proj-scroll{overflow-x:auto;overflow-y:visible;padding-bottom:16px;cursor:grab;scrollbar-width:thin;scrollbar-color:var(--border) transparent;-webkit-overflow-scrolling:touch}
+.proj-scroll:active{cursor:grabbing}
+.proj-scroll::-webkit-scrollbar{height:2px}
+.proj-scroll::-webkit-scrollbar-thumb{background:var(--border)}
+.proj-track{display:flex;gap:24px;width:max-content;padding:4px 0 8px}
+@media(max-width:768px){
+  .proj-scroll{overflow-x:visible;cursor:default}
+  .proj-track{flex-direction:column;width:100%}
+}
+
+/* Fixed calc bug & border styling */
+.proj-card{width:330px;flex-shrink:0;background:var(--bg-card);border:1px solid var(--border);padding:36px 32px;position:relative;transition:transform .3s var(--ease),border-color .3s,box-shadow .3s;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+@media(max-width:768px){.proj-card{width:100%}}
+
+.proj-card::before{content:'';position:absolute;top:0;right:22px;width:0;height:0;border-left:22px solid transparent;border-top:22px solid var(--border);pointer-events:none;transition:border-top-color .3s}
+.proj-card:hover{transform:translateY(-8px);border-color:rgba(255,75,92,.35);box-shadow:0 0 32px rgba(255,75,92,.08),0 24px 48px rgba(0,0,0,.5)}
+.proj-card:hover::before{border-top-color:rgba(255,75,92,.35)}
+
+.proj-num{font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:20px;letter-spacing:.1em}
+.proj-title{font-family:var(--head);font-weight:700;font-size:19px;line-height:1.3;color:var(--t1);margin-bottom:12px}
+.proj-desc{font-size:13.5px;color:var(--t2);line-height:1.65;margin-bottom:24px}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;padding:4px 10px;border-radius:3px;border:1px solid}
+.tag-t{color:var(--accent);background:var(--accent-d);border-color:rgba(255,75,92,.18)}
+.tag-v{color:#d97706;background:rgba(217,119,6,.12);border-color:rgba(217,119,6,.2)}
+.proj-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--t3);transition:color .25s,gap .25s}
+.proj-link:hover{color:var(--accent);gap:10px}
+.drag-hint{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.1em;margin-top:20px;display:flex;align-items:center;gap:10px}
+.drag-hint::before{content:'';display:block;width:22px;height:1px;background:var(--t3)}
+@media(max-width:768px){.drag-hint{display:none}}
+
+/* ─── CONTACT ────────────────────────────────────────── */
+#contact{background:var(--bg-s)}
+.contact-wrap{max-width:580px}
+.contact-cta{font-size:clamp(15px,2vw,18px);color:var(--t2);line-height:1.75;margin-bottom:48px}
+.contact-cta strong{color:var(--t1)}
+.contact-links{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+
+/* Fixed calc bug in contact buttons */
+.c-btn{display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;letter-spacing:.07em;color:var(--t2);background:var(--bg-card);border:1px solid var(--border);padding:14px 24px;transition:color .25s,border-color .25s,background .25s,transform .25s,box-shadow .25s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.c-btn .pfx{color:var(--accent);font-weight:700}
+.c-btn:hover{color:var(--t1);border-color:rgba(255,75,92,.4);background:rgba(255,75,92,.04);transform:translateX(8px);box-shadow:var(--accent-g)}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer{padding:32px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+@media(max-width:768px){footer{padding:24px;flex-direction:column;align-items:flex-start}}
+.foot-copy{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.08em}
+.foot-copy span{color:var(--accent)}
+.foot-credit{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.06em}
+.foot-credit a{color:var(--t3);border-bottom:1px solid transparent;transition:color .25s,border-color .25s}
+.foot-credit a:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ─── FADE-UP ────────────────────────────────────────── */
+.fu{opacity:0;transform:translateY(28px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.fu.lit{opacity:1;transform:translateY(0)}
+.fu:nth-child(2){transition-delay:.1s}
+.fu:nth-child(3){transition-delay:.2s}
+.fu:nth-child(4){transition-delay:.3s}
+@media(prefers-reduced-motion:reduce){
+  .fu{opacity:1;transform:none;transition:none}
+  .shape{animation:none}
+  .scroll-down{animation:none}
+  .hero-status-dot{animation:none}
+  .blink-cur{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div id="grain" aria-hidden="true"></div>
+<div id="cur" aria-hidden="true"></div>
+<div id="cur-ring" aria-hidden="true"></div>
+
+<!-- ════ NAV ════ -->
+<nav id="nav" aria-label="Main navigation">
+  <div class="nav-inner">
+    <div class="nav-logo">Srongwut<span>.dev</span></div>
+    <ul class="nav-links" id="navLinks" role="list">
+      <li><a href="#about"    data-s="about">About</a></li>
+      <li><a href="#projects" data-s="projects">Projects</a></li>
+      <li><a href="#contact"  data-s="contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="ham" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section id="hero" aria-labelledby="hero-name">
+  <div class="shapes" aria-hidden="true">
+    <div class="shape"></div><div class="shape"></div><div class="shape"></div>
+    <div class="shape"></div><div class="shape"></div><div class="shape"></div>
+  </div>
+
+  <div class="wrap hero-content">
+    <div class="hero-status" aria-label="Status: Available for research">
+      <span class="hero-status-dot" aria-hidden="true"></span>
+      Available for Research
+    </div>
+
+    <h1 class="hero-name" id="hero-name">
+      <span class="solid">Srongwut</span><br>
+      <span class="ghost">Srichaiyorak</span>
+    </h1>
+
+    <p class="hero-sub" aria-live="polite">
+      <span class="typed" id="typed"></span><span class="blink-cur" aria-hidden="true"></span>
+    </p>
+
+    <div class="hero-btns">
+      <a href="#projects" class="btn btn-fill">View Projects</a>
+      <a href="#contact"  class="btn btn-out">Get In Touch</a>
+    </div>
+  </div>
+
+  <div class="scroll-down" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    scroll
+  </div>
+</section>
+
+<!-- ════ ABOUT ════ -->
+<section id="about" aria-labelledby="about-title">
+  <div class="circuit" aria-hidden="true">
+    <svg viewBox="0 0 560 560" fill="none" xmlns="http://www.w3.org/2000/svg" style="top:0;right:0">
+      <path d="M60 120 H220 V200 H420 V310 H540" stroke="#ff4b5c" stroke-width=".8" stroke-dasharray="4 9"/>
+      <path d="M110 60 V260 H310 V440 H510" stroke="#75292D" stroke-width=".8" stroke-dasharray="3 11"/>
+      <circle cx="220" cy="200" r="3.5" fill="#ff4b5c"/>
+      <circle cx="420" cy="310" r="3.5" fill="#ff4b5c"/>
+      <circle cx="310" cy="440" r="3.5" fill="#75292D"/>
+      <rect x="217" y="197" width="7" height="7" fill="none" stroke="#ff4b5c" stroke-width=".8"/>
+    </svg>
+  </div>
+  <div class="wm" aria-hidden="true">01</div>
+
+  <div class="wrap">
+    <div class="s-label"><span class="s-num">01 / 04</span>About</div>
+    <h2 class="s-title fu" id="about-title">Who I <em>Am</em></h2>
+
+    <div class="about-grid">
+      <div class="bio fu">
+        <p>สวัสดีครับ ผมนายทรงวุฒิ ขออนุญาตเล่าแรงบันดาลใจว่าทำไมถึงสนใจ ARIS ของมหาวิทยาลัยขอนแก่น
+มันเริ่มในช่วงมัธยมศึกษาปีที่ 4 ในตอนนั้นผมได้เรียนวิชาฟิสิกส์แล้วพบว่าผมชอบวิชานี้มากเพราะมันอธิบายสิ่งต่างๆในธรรมชาติได้ ในขณะเดียวกันมันก็ทำให้ควบคุมธรรมชาติของบางสิ่งได้เช่นกัน เมื่อผมมาคิดดูดีๆว่าผมต้องการอะไรกันแน่เมื่อต้องเลือกสิ่งที่จะทำในอนาคต หลังจากที่ผมลองพยายามทำกิจกรรมต่างๆเพื่อค้นหาตัวเอง
+ผมพบว่าสิ่งที่ผมอยากทำจริงๆมันคือการควบคุมธรรมชาติให้มาเป็นเครื่องมือคอยช่วยเหลือและก้าวข้ามขีดจำกัดของข้อจำกัดเดิมๆ แล้วถ้ามีคนตั้งคำถามว่าแล้วถ้าไม่มีสิ่งอำนวยคอยช่วยล่ะจะทำอย่างไร
+ในมุมมองของผม คนที่ไม่มีเครื่องมือก็เหมือนครึ่งคน เราจำเป็นต้องค้นพบไฟในการเริ่มต้น จำเป็นต้องมีเครื่อง EUV ในการผลิตชิป ผมคิดว่าเราควรจะรู้วิธีสร้างเครื่องมือพอๆกับวิธีใช้เครื่องมือ หากเราต้องเชี่ยวชาญในสิ่งที่เราทำมันเฉพาะทาง
+เมื่อผมเปิดดูเนื้อหาสิ่งที่สาขานี้สอนมันตรงกับสิ่งที่ผมต้องการจะทำในอนาคตมากๆ ทั้งระบบอัตโนมัติ หุ่นยนต์ และระบบอัจฉริยะ</p>
+        <div class="bio-meta">
+          <div class="meta-row"><span class="lbl">Status</span><span class="val">M.6 Udonpit</span></div>
+          <div class="meta-row"><span class="lbl">Focus</span><span class="val">ARIS KKU</span></div>
+          <div class="meta-row"><span class="lbl">Location</span><span class="val">Thailand</span></div>
+          <div class="meta-row"><span class="lbl">Languages</span><span class="val">Thai (native) · English (Nightmare English Teacher)</span></div>
+        </div>
+      </div>
+
+      <div class="fu">
+        <div class="skills-label">Technical Proficiency</div>
+        <div class="skill-list">
+          <div class="skill-row" style="--w:100%">
+            <div class="skill-top"><span class="skill-name">แต่งนิยาย</span><span class="skill-pct">100%</span></div>
+            <div class="track"><div class="bar"></div></div>
+          </div>
+          <div class="skill-row" style="--w:100%">
+            <div class="skill-top"><span class="skill-name">เล่นเกม</span><span class="skill-pct">100%</span></div>
+            <div class="track"><div class="bar"></div></div>
+          </div>
+          <div class="skill-row" style="--w:100%">
+            <div class="skill-top"><span class="skill-name">โยนงานให้ Ai ทำแทน</span><span class="skill-pct">100%</span></div>
+            <div class="track"><div class="bar"></div></div>
+          </div>
+          <div class="skill-row" style="--w:100%">
+            <div class="skill-top"><span class="skill-name">จินตนาการ</span><span class="skill-pct">100%</span></div>
+            <div class="track"><div class="bar"></div></div>
+          </div>
+          <div class="skill-row" style="--w:100%">
+            <div class="skill-top"><span class="skill-name">การแก้ปัญหา</span><span class="skill-pct">100%</span></div>
+            <div class="track"><div class="bar"></div></div>
+          </div>
+          <div class="skill-row" style="--w:100%">
+            <div class="skill-top"><span class="skill-name">Vibe Coding</span><span class="skill-pct">100%</span></div>
+            <div class="track"><div class="bar"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ PROJECTS ════ -->
+<section id="projects" aria-labelledby="proj-title">
+  <div class="wm" aria-hidden="true">02</div>
+  <div class="wrap">
+    <div class="s-label"><span class="s-num">02 / 04</span>Projects</div>
+    <h2 class="s-title fu" id="proj-title">สิ่งที่ <em>ทำประจำ</em></h2>
+  </div>
+
+  <div class="wrap">
+    <div class="proj-scroll" id="projScroll" role="region" aria-label="Projects list">
+      <div class="proj-track">
+
+        <article class="proj-card fu">
+          <div class="proj-num">01 —</div>
+          <h3 class="proj-title">แต่งนิยาย</h3>
+          <p class="proj-desc">ผมมีงานอดิเรกคือการนั่งแต่งนวนิยาย แต่ไม่เผยแพร่</p>
+          <div class="proj-tags">
+            <span class="tag tag-t">Dark</span>
+            <span class="tag tag-t">Conceptual Fiction</span>
+            <span class="tag tag-t">Sci-fi</span>
+            <span class="tag tag-v">Horror</span>
+            <span class="tag tag-v">Comedy</span>
+          </div>
+        </article>
+
+        <article class="proj-card fu">
+          <div class="proj-num">02 —</div>
+          <h3 class="proj-title">ศึกษาค้นคว้าหัวข้อที่ตนเองสนใจ</h3>
+          <p class="proj-desc">การศึกษาเชิงลึกเพื่อหาคำตอบที่ตนเองตั้งคำถามไว้</p>
+          <div class="proj-tags">
+            <span class="tag tag-t">การเงิน</span>
+            <span class="tag tag-t">ประวัติศาสตร์</span>
+            <span class="tag tag-t">ฟิสิกข์และคณิตศาสตร์</span>
+            <span class="tag tag-t">เทคนิคทางความคิด</span>
+          </div>
+        </article>
+
+        <article class="proj-card fu">
+          <div class="proj-num">03 —</div>
+          <h3 class="proj-title">เล่นเกม</h3>
+          <p class="proj-desc">Rov,Roblox,Genshin</p>
+          <div class="proj-tags">
+            <span class="tag tag-t">ตัวโยน</span>
+          </div>
+        </article>
+
+        <article class="proj-card fu">
+          <div class="proj-num">04 —</div>
+          <h3 class="proj-title">เรื่องราวประเภทที่ชอบ</h3>
+          <p class="proj-desc">ส่วนตัวผมเป็นคนที่ชอบดูหนังสยองขวัญยุค 70-90 และงานเขียนสยองขวัญ</p>
+          <div class="proj-tags">
+            <span class="tag tag-t">Cosmic Horor</span>
+            <span class="tag tag-t">Body Horor</span>
+            <span class="tag tag-t">Psychological Thriller</span>
+            <span class="tag tag-t">Slasher</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+    <p class="drag-hint" aria-hidden="true"></p>
+  </div>
+</section>
+
+<!-- ════ CONTACT ════ -->
+<section id="contact" aria-labelledby="contact-title">
+  <div class="circuit" aria-hidden="true">
+    <svg viewBox="0 0 560 560" fill="none" xmlns="http://www.w3.org/2000/svg" style="top:0;left:0">
+      <path d="M500 120 H340 V210 H140 V330 H60" stroke="#ff4b5c" stroke-width=".8" stroke-dasharray="4 9"/>
+      <path d="M460 60 V230 H270 V420 H90 V530" stroke="#75292D" stroke-width=".8" stroke-dasharray="3 11"/>
+      <circle cx="340" cy="210" r="3.5" fill="#ff4b5c"/>
+      <circle cx="140" cy="330" r="3.5" fill="#ff4b5c"/>
+      <circle cx="270" cy="420" r="3.5" fill="#75292D"/>
+    </svg>
+  </div>
+  <div class="wm" aria-hidden="true">03</div>
+
+  <div class="wrap">
+    <div class="s-label"><span class="s-num">03 / 04</span>Contact</div>
+    <h2 class="s-title fu" id="contact-title">Let's <em>Connect</em></h2>
+
+    <div class="contact-wrap fu">
+      <p class="contact-cta">
+        <strong>จุดเริ่มต้นที่ทำให้ผมสนใจด้านหุ่นยนต์และปัญญาประดิษฐ์.</strong> มันเริ่มมาจากการที่ 9arm ทำคลิปเกี่ยวกับรายการ Super AI Engineering แล้วผมทึ่งในทักษะอาชีพที่ทำอะไรได้มากมายในอนาคต มันดูมีหลายเรื่องให้ต้องทำและไม่น่าเบื่อ แล้วเมื่อผมขึ้น ม.ปลาย ผมพบว่าผมไม่มีปัญหากับวิชาฟิสิกข์และคณิตศาสตร์หรือการเขียน Code แม้ผมจะ Vibe Coding ก็ตาม ผมเลยตัดสินใจว่าจะมาทางนี้      </p>
+      <div class="contact-links">
+        <a href="mailto:srongwutstudy@gmail.com" class="c-btn">
+          <span class="pfx">&gt;_</span>srongwutstudy@gmail.com
+        </a>
+        <a href="https://ดูไร.com" target="_blank" rel="noopener noreferrer" class="c-btn">
+          <span class="pfx">&gt;_</span> Zhs Says
+        </a>
+        <a href="https://ดูไร.com" target="_blank" rel="noopener noreferrer" class="c-btn">
+          <span class="pfx">&gt;_</span> เบอร์ติดต่อ 0650056169
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <p class="foot-copy">© <span id="yr"></span> <span>อันนี้คืออะไรก็ไม่รู้มีไว้ทำไมแต่เห็นคนอื่นใส่กัน</span>. ผู้ตรวจอ่านมาถึงตรงนี้.</p>
+  <p class="foot-credit">Built with <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code แต่ซ่อมบำรุงโดย Gemini</a></p>
+</footer>
+
+<script>
+/* ── CURSOR ─────────────────────────────────────────── */
+(function(){
+  const dot = document.getElementById('cur');
+  const ring = document.getElementById('cur-ring');
+  if(!dot||!ring) return;
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX; my=e.clientY;
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+  });
+  (function raf(){
+    rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(raf);
+  })();
+  document.querySelectorAll('a,button,[role="button"]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ dot.style.transform='translate(-50%,-50%) scale(2.2)'; ring.style.borderColor='rgba(255,75,92,.6)'; });
+    el.addEventListener('mouseleave',()=>{ dot.style.transform='translate(-50%,-50%) scale(1)';   ring.style.borderColor='rgba(255,75,92,.35)'; });
+  });
+})();
+
+/* ── TYPEWRITER ─────────────────────────────────────── */
+(function(){
+  const el = document.getElementById('typed');
+  if(!el) return;
+  const phrases = ['Engineering Student','ARIS Applicant · KKU','Builder of Things','Robotics Enthusiast'];
+  const reduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(reduced){ el.textContent = phrases.join(' · '); return; }
+  let pi=0,ci=0,del=false,t;
+  function tick(){
+    const p = phrases[pi];
+    if(!del){ ci++; el.textContent=p.slice(0,ci); if(ci===p.length){ del=true; t=setTimeout(tick,2200); return; } }
+    else { ci--; el.textContent=p.slice(0,ci); if(ci===0){ del=false; pi=(pi+1)%phrases.length; } }
+    t=setTimeout(tick, del?38:82);
+  }
+  setTimeout(tick,600);
+})();
+
+/* ── NAV SCROLL + ACTIVE ────────────────────────────── */
+(function(){
+  const nav = document.getElementById('nav');
+  const links = document.querySelectorAll('.nav-links a[data-s]');
+  const secs = document.querySelectorAll('section[id]');
+  function update(){
+    nav.classList.toggle('scrolled', window.scrollY>30);
+    let cur='';
+    secs.forEach(s=>{ if(s.getBoundingClientRect().top<=90) cur=s.id; });
+    links.forEach(a=>a.classList.toggle('active', a.dataset.s===cur));
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  update();
+})();
+
+/* ── MOBILE NAV ─────────────────────────────────────── */
+(function(){
+  const btn = document.getElementById('ham');
+  const menu = document.getElementById('navLinks');
+  if(!btn||!menu) return;
+  btn.addEventListener('click',()=>{
+    const open = menu.classList.toggle('open');
+    btn.classList.toggle('open',open);
+    btn.setAttribute('aria-expanded',open);
+  });
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    menu.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded',false);
+  }));
+})();
+
+/* ── INTERSECTION OBSERVER ──────────────────────────── */
+(function(){
+  const reduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  /* fade-up */
+  const fuEls = document.querySelectorAll('.fu');
+  const fuObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('lit'); fuObs.unobserve(e.target); } });
+  },{threshold:.12,rootMargin:'0px 0px -32px 0px'});
+  fuEls.forEach(el=>{ if(reduced) el.classList.add('lit'); else fuObs.observe(el); });
+
+  /* skill bars */
+  const rows = document.querySelectorAll('.skill-row');
+  const skillObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('lit'); skillObs.unobserve(e.target); } });
+  },{threshold:.4});
+  rows.forEach(r=>{ if(reduced) r.classList.add('lit'); else skillObs.observe(r); });
+})();
+
+/* ── DRAG SCROLL (projects) ─────────────────────────── */
+(function(){
+  const el = document.getElementById('projScroll');
+  if(!el) return;
+  let down=false,startX=0,sl=0;
+  el.addEventListener('mousedown',e=>{ down=true; startX=e.pageX-el.offsetLeft; sl=el.scrollLeft; });
+  el.addEventListener('mouseleave',()=>down=false);
+  el.addEventListener('mouseup',()=>down=false);
+  el.addEventListener('mousemove',e=>{ if(!down) return; e.preventDefault(); el.scrollLeft=sl-(e.pageX-el.offsetLeft-startX)*1.5; });
+})();
+
+/* ── YEAR ───────────────────────────────────────────── */
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
